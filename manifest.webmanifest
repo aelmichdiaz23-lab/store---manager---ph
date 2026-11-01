@@ -1,0 +1,18 @@
+{
+  "name": "Store Manager PH",
+  "short_name": "Store Manager",
+  "description": "Inventory, sales, expenses and reports for a sari-sari store.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f4",
+  "theme_color": "#14532d",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

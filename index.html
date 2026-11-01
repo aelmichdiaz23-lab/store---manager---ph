@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14532d">
+<meta name="description" content="Store Manager PH - inventory, sales, expenses and reports for sari-sari stores.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Store Manager PH</title>
+<style>
+:root{--green:#14532d;--green2:#166534;--bg:#f3f6f4;--card:#fff;--text:#17231b;--muted:#647067;--line:#e2e9e4;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+header{background:var(--green);color:white;padding:18px 16px 16px;position:sticky;top:0;z-index:3}
+header h1{font-size:21px;margin:0 0 4px}header p{margin:0;font-size:12px;opacity:.85}
+nav{display:flex;gap:6px;overflow:auto;padding:9px;background:#fff;position:sticky;top:67px;z-index:2;border-bottom:1px solid var(--line)}
+nav button{border:0;background:#edf3ef;color:#23402c;padding:10px 13px;border-radius:20px;white-space:nowrap;font-weight:700}
+nav button.active{background:var(--green);color:#fff}
+main{padding:14px;max-width:760px;margin:auto}.page{display:none}.page.active{display:block}
+h2{font-size:19px;margin:8px 0 12px}.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--card);padding:14px;border-radius:13px;border:1px solid var(--line);margin-bottom:10px}
+.metric small{display:block;color:var(--muted);font-size:12px}.metric strong{font-size:21px;display:block;margin-top:7px}
+label{display:block;font-size:13px;font-weight:700;margin:11px 0 5px}
+input,select{width:100%;padding:12px;border:1px solid #cbd6ce;border-radius:9px;font-size:16px;background:white;color:var(--text)}
+button.primary{width:100%;border:0;border-radius:9px;background:var(--green2);color:white;padding:13px;font-size:15px;font-weight:700;margin-top:12px}
+button.secondary{border:1px solid #cbd6ce;border-radius:8px;background:#fff;padding:8px 10px;color:var(--text)}
+button.danger{border:0;background:#fff0ef;color:var(--red);border-radius:8px;padding:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item{padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}
+.item strong{font-size:14px}.item small{display:block;color:var(--muted);margin-top:3px}
+.pill{font-size:11px;background:#eaf4ed;color:#185b30;border-radius:20px;padding:4px 8px}
+.empty{text-align:center;color:var(--muted);padding:22px 8px;font-size:13px}
+.note{background:#fff8df;border:1px solid #f0df9f;padding:11px;border-radius:9px;font-size:12px;line-height:1.45;margin:10px 0}
+.actions{display:flex;gap:6px;align-items:center}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header><h1>🏪 Store Manager PH</h1><p>Simple business tracker • Taglish • Offline-ready prototype</p></header>
+<nav>
+<button class="active" data-tab="home">Home</button><button data-tab="inventory">Inventory</button><button data-tab="sales">Sales</button><button data-tab="expenses">Expenses</button><button data-tab="reports">Reports</button>
+</nav>
+<main>
+<section id="home" class="page active">
+<h2>Dashboard</h2><p class="muted" id="today"></p>
+<div class="grid">
+<div class="card metric"><small>Today's Sales</small><strong id="todaySales">₱0.00</strong></div>
+<div class="card metric"><small>Today's Expenses</small><strong id="todayExpenses">₱0.00</strong></div>
+<div class="card metric"><small>Products</small><strong id="productCount">0</strong></div>
+<div class="card metric"><small>Low Stock Items</small><strong id="lowCount">0</strong></div>
+</div>
+<div class="card"><div class="row"><strong>Quick reminder</strong><span class="pill">Store tip</span></div><p class="muted">I-record agad ang bawat benta at gastos para mas accurate ang reports.</p></div>
+<div class="note">Important: Ang prototype na ito ay nagse-save sa browser ng cellphone na ito. Huwag muna i-clear ang browser data. Gumawa tayo ng backup/export feature sa susunod na version.</div>
+</section>
+
+<section id="inventory" class="page">
+<h2>Inventory / Products</h2>
+<div class="card">
+<strong>Add New Product</strong>
+<label>Product name</label><input id="pname" placeholder="Hal. Sardinas 155g">
+<div class="grid">
+<div><label>Cost price (₱)</label><input id="pcost" type="number" min="0" step=".01" placeholder="15"></div>
+<div><label>Selling price (₱)</label><input id="pprice" type="number" min="0" step=".01" placeholder="18"></div>
+</div>
+<label>Starting stock (pcs)</label><input id="pstock" type="number" min="0" step="1" placeholder="20">
+<button class="primary" onclick="addProduct()">＋ Add Product</button>
+</div>
+<div class="row"><strong>Product list</strong><span class="muted" id="inventoryTotal">0 items</span></div>
+<div class="card" id="productList"></div>
+</section>
+
+<section id="sales" class="page">
+<h2>Record a Sale</h2>
+<div class="card">
+<label>Select product</label><select id="saleProduct"></select>
+<label>Quantity sold</label><input id="saleQty" type="number" min="1" step="1" value="1">
+<button class="primary" onclick="recordSale()">Record Sale</button>
+<p class="muted">Automatic na mababawasan ang stock kapag na-record ang sale.</p>
+</div>
+<strong>Recent sales</strong><div class="card" id="salesList"></div>
+</section>
+
+<section id="expenses" class="page">
+<h2>Expenses / Gastos</h2>
+<div class="card">
+<strong>Add Expense</strong>
+<label>Description</label><input id="edesc" placeholder="Hal. Pamasahe / kuryente">
+<label>Amount (₱)</label><input id="eamount" type="number" min=".01" step=".01" placeholder="100">
+<button class="primary" onclick="addExpense()">＋ Save Expense</button>
+</div>
+<strong>Recent expenses</strong><div class="card" id="expenseList"></div>
+</section>
+
+<section id="reports" class="page">
+<h2>Reports / Ulat</h2>
+<div class="grid">
+<div class="card metric"><small>Total Sales</small><strong id="rSales">₱0.00</strong></div>
+<div class="card metric"><small>Cost of Goods Sold</small><strong id="rCost">₱0.00</strong></div>
+<div class="card metric"><small>Gross Profit</small><strong id="rGross">₱0.00</strong></div>
+<div class="card metric"><small>Total Expenses</small><strong id="rExpenses">₱0.00</strong></div>
+</div>
+<div class="card metric"><small>Estimated Net Profit</small><strong id="rNet">₱0.00</strong><p class="muted">Sales − cost ng nabentang items − recorded expenses. Hindi pa kasama ang ibang unrecorded costs.</p></div>
+<div class="card"><strong>Data backup</strong><p class="muted">I-download ang kopya ng iyong records bilang JSON file.</p><button class="primary" onclick="backupData()">Download Backup</button><label>Restore backup file</label><input type="file" id="restoreFile" accept=".json,application/json" onchange="restoreData(event)"></div>
+<div class="card"><strong>Reset demo data</strong><p class="muted">Tatanggalin nito ang lahat ng products, sales at expenses sa browser na ito.</p><button class="danger" onclick="resetData()">Reset all data</button></div>
+</section>
+</main>
+<footer>Store Manager PH • Version 1.0 prototype</footer>
+<script>
+const KEY='storeManagerPH_v1';
+let db={products:[],sales:[],expenses:[]};
+try{const saved=localStorage.getItem(KEY);if(saved)db=JSON.parse(saved)}catch(e){}
+const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const todayKey=()=>new Date().toLocaleDateString('en-CA');
+const dateLabel=iso=>new Date(iso).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'});
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function tab(name){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===name));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));render()}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
+function addProduct(){
+ const name=document.getElementById('pname').value.trim(),cost=Number(document.getElementById('pcost').value),price=Number(document.getElementById('pprice').value),stock=Number(document.getElementById('pstock').value);
+ if(!name||document.getElementById('pcost').value===''||document.getElementById('pprice').value===''||document.getElementById('pstock').value===''||cost<0||price<=0||stock<0||!Number.isInteger(stock)){alert('Pakilagyan nang tama ang lahat ng fields.');return}
+ db.products.push({id:Date.now(),name,cost,price,stock});['pname','pcost','pprice','pstock'].forEach(id=>document.getElementById(id).value='');save();
+}
+function deleteProduct(id){if(!confirm('Delete this product? Hindi mabubura ang dating sales records.'))return;db.products=db.products.filter(p=>p.id!==id);save()}
+function adjustStock(id){const p=db.products.find(x=>x.id===id);const n=prompt('Ilagay ang bagong stock quantity para sa '+p.name,p.stock);if(n===null)return;const v=Number(n);if(!Number.isInteger(v)||v<0){alert('Maglagay ng valid whole number.');return}p.stock=v;save()}
+function recordSale(){
+ const id=Number(document.getElementById('saleProduct').value),qty=Number(document.getElementById('saleQty').value),p=db.products.find(x=>x.id===id);
+ if(!p){alert('Mag-add muna ng product sa Inventory.');return}if(!Number.isInteger(qty)||qty<1){alert('Valid quantity ang ilagay.');return}if(qty>p.stock){alert('Kulang ang stock. Available: '+p.stock);return}
+ p.stock-=qty;db.sales.unshift({id:Date.now(),productId:p.id,name:p.name,qty,price:p.price,cost:p.cost,total:p.price*qty,date:new Date().toISOString()});document.getElementById('saleQty').value=1;save();alert('Sale recorded! Total: '+money(p.price*qty));
+}
+function addExpense(){const desc=document.getElementById('edesc').value.trim(),amount=Number(document.getElementById('eamount').value);if(!desc||amount<=0||!Number.isFinite(amount)){alert('Ilagay ang description at valid amount.');return}db.expenses.unshift({id:Date.now(),desc,amount,date:new Date().toISOString()});document.getElementById('edesc').value='';document.getElementById('eamount').value='';save()}
+function sum(a,fn){return a.reduce((t,x)=>t+fn(x),0)}
+function render(){
+ const today=todayKey(),ts=db.sales.filter(x=>x.date.slice(0,10)===today),te=db.expenses.filter(x=>x.date.slice(0,10)===today);
+ document.getElementById('today').textContent=new Date().toLocaleDateString('en-PH',{dateStyle:'full'});
+ document.getElementById('todaySales').textContent=money(sum(ts,x=>x.total));document.getElementById('todayExpenses').textContent=money(sum(te,x=>x.amount));
+ document.getElementById('productCount').textContent=db.products.length;document.getElementById('lowCount').textContent=db.products.filter(x=>x.stock<=5).length;
+ document.getElementById('inventoryTotal').textContent=db.products.length+' items';
+ document.getElementById('productList').innerHTML=db.products.length?db.products.map(p=>`<div class="item"><div class="row"><div><strong>${esc(p.name)}</strong><small>Cost ${money(p.cost)} • Selling ${money(p.price)}</small><small>Stock: <b>${p.stock}</b> ${p.stock<=5?'<span class="pill">Low stock</span>':''}</small></div><div class="actions"><button class="secondary" onclick="adjustStock(${p.id})">Stock</button><button class="danger" onclick="deleteProduct(${p.id})">✕</button></div></div></div>`).join(''):'<div class="empty">Wala pang products. Mag-add sa form sa taas.</div>';
+ const sel=document.getElementById('saleProduct');sel.innerHTML=db.products.filter(p=>p.stock>0).map(p=>`<option value="${p.id}">${esc(p.name)} — ${p.stock} pcs — ${money(p.price)}</option>`).join('');if(!sel.options.length)sel.innerHTML='<option value="">No available stock</option>';
+ document.getElementById('salesList').innerHTML=db.sales.length?db.sales.slice(0,30).map(s=>`<div class="item"><div class="row"><div><strong>${esc(s.name)} × ${s.qty}</strong><small>${dateLabel(s.date)} • ${money(s.price)} each</small></div><b>${money(s.total)}</b></div></div>`).join(''):'<div class="empty">Wala pang sales records.</div>';
+ document.getElementById('expenseList').innerHTML=db.expenses.length?db.expenses.slice(0,30).map(e=>`<div class="item"><div class="row"><div><strong>${esc(e.desc)}</strong><small>${dateLabel(e.date)}</small></div><b>${money(e.amount)}</b></div></div>`).join(''):'<div class="empty">Wala pang expenses.</div>';
+ const sales=sum(db.sales,x=>x.total),cost=sum(db.sales,x=>x.cost*x.qty),expenses=sum(db.expenses,x=>x.amount),gross=sales-cost;
+ document.getElementById('rSales').textContent=money(sales);document.getElementById('rCost').textContent=money(cost);document.getElementById('rGross').textContent=money(gross);document.getElementById('rExpenses').textContent=money(expenses);document.getElementById('rNet').textContent=money(gross-expenses);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function backupData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='StoreManagerPH-backup.json';a.click();URL.revokeObjectURL(url)}
+function restoreData(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.products)||!Array.isArray(d.sales)||!Array.isArray(d.expenses))throw Error();if(!confirm('Replace current data with this backup?'))return;db=d;save();alert('Backup restored.')}catch(e){alert('Invalid backup file.')}ev.target.value=''};r.readAsText(f)}
+function resetData(){if(!confirm('Sigurado ka? Mabubura ang lahat ng records.'))return;db={products:[],sales:[],expenses:[]};save()}
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('Offline worker registration failed:', err));
+  });
+}
+</script>
+</body></html>
