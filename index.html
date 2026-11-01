@@ -1,158 +1,133 @@
 <!doctype html>
-<html lang="en">
+<html lang="fil">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#14532d">
-<meta name="description" content="Store Manager PH - inventory, sales, expenses and reports for sari-sari stores.">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
-<title>Store Manager PH</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#176b4d">
+<meta name="description" content="Store Manager Organizer - offline sari-sari store organizer">
+<link rel="manifest" href="manifest.json">
+<title>Store Manager Organizer</title>
 <style>
-:root{--green:#14532d;--green2:#166534;--bg:#f3f6f4;--card:#fff;--text:#17231b;--muted:#647067;--line:#e2e9e4;--red:#b42318}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
-header{background:var(--green);color:white;padding:18px 16px 16px;position:sticky;top:0;z-index:3}
-header h1{font-size:21px;margin:0 0 4px}header p{margin:0;font-size:12px;opacity:.85}
-nav{display:flex;gap:6px;overflow:auto;padding:9px;background:#fff;position:sticky;top:67px;z-index:2;border-bottom:1px solid var(--line)}
-nav button{border:0;background:#edf3ef;color:#23402c;padding:10px 13px;border-radius:20px;white-space:nowrap;font-weight:700}
-nav button.active{background:var(--green);color:#fff}
-main{padding:14px;max-width:760px;margin:auto}.page{display:none}.page.active{display:block}
-h2{font-size:19px;margin:8px 0 12px}.muted{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{background:var(--card);padding:14px;border-radius:13px;border:1px solid var(--line);margin-bottom:10px}
-.metric small{display:block;color:var(--muted);font-size:12px}.metric strong{font-size:21px;display:block;margin-top:7px}
-label{display:block;font-size:13px;font-weight:700;margin:11px 0 5px}
-input,select{width:100%;padding:12px;border:1px solid #cbd6ce;border-radius:9px;font-size:16px;background:white;color:var(--text)}
-button.primary{width:100%;border:0;border-radius:9px;background:var(--green2);color:white;padding:13px;font-size:15px;font-weight:700;margin-top:12px}
-button.secondary{border:1px solid #cbd6ce;border-radius:8px;background:#fff;padding:8px 10px;color:var(--text)}
-button.danger{border:0;background:#fff0ef;color:var(--red);border-radius:8px;padding:8px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.item{padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}
-.item strong{font-size:14px}.item small{display:block;color:var(--muted);margin-top:3px}
-.pill{font-size:11px;background:#eaf4ed;color:#185b30;border-radius:20px;padding:4px 8px}
-.empty{text-align:center;color:var(--muted);padding:22px 8px;font-size:13px}
-.note{background:#fff8df;border:1px solid #f0df9f;padding:11px;border-radius:9px;font-size:12px;line-height:1.45;margin:10px 0}
-.actions{display:flex;gap:6px;align-items:center}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
-@media(min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+:root{--green:#176b4d;--light:#eaf5ef;--ink:#182a22;--muted:#63746b;--line:#dce7e0;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--green);color:white;padding:22px 16px 18px}header h1{font-size:23px;margin:0 0 5px}header p{margin:0;font-size:13px;opacity:.9}
+main{max-width:850px;margin:auto;padding:14px 12px 40px}.tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 12px}
+.tabs button{border:1px solid var(--line);background:white;color:var(--ink);padding:10px 13px;border-radius:999px;white-space:nowrap;font-weight:650}
+.tabs button.active{background:var(--green);color:white;border-color:var(--green)}
+.panel{display:none}.panel.active{display:block}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 2px 7px #102c1a08}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:0 0 9px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{background:var(--light);border-radius:12px;padding:12px}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:21px;margin-top:5px;overflow-wrap:anywhere}
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}label{display:block;font-size:12px;color:var(--muted);font-weight:650}input,select,textarea{width:100%;padding:11px 10px;margin-top:5px;border:1px solid #cbd9d0;border-radius:10px;background:white;font:inherit;color:var(--ink);min-width:0}textarea{resize:vertical;min-height:70px}.wide{grid-column:1/-1}
+button.primary{background:var(--green);color:white;border:0;border-radius:10px;padding:12px 14px;font-weight:700;width:100%}button.secondary,button.danger{border:1px solid var(--line);border-radius:9px;background:white;padding:8px 10px;font-weight:650}button.danger{color:#a12828}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions button{width:auto}
+.item{border-top:1px solid var(--line);padding:12px 0;display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.item:first-child{border-top:0}.item b{display:block}.item small{display:block;color:var(--muted);margin-top:3px}.money{font-weight:750;white-space:nowrap}.empty{color:var(--muted);font-size:14px;padding:8px 0}
+.note{font-size:12px;color:var(--muted);line-height:1.5}.pill{font-size:11px;border-radius:20px;padding:4px 7px;background:#fff0cf;color:#72510a}
+@media(min-width:620px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
 <body>
-<header><h1>🏪 Store Manager PH</h1><p>Simple business tracker • Taglish • Offline-ready prototype</p></header>
-<nav>
-<button class="active" data-tab="home">Home</button><button data-tab="inventory">Inventory</button><button data-tab="sales">Sales</button><button data-tab="expenses">Expenses</button><button data-tab="reports">Reports</button>
-</nav>
+<header><h1>🛒 Store Manager Organizer</h1><p>Para sa sari-sari store • Gumagana kahit offline sa device na ito</p></header>
 <main>
-<section id="home" class="page active">
-<h2>Dashboard</h2><p class="muted" id="today"></p>
-<div class="grid">
-<div class="card metric"><small>Today's Sales</small><strong id="todaySales">₱0.00</strong></div>
-<div class="card metric"><small>Today's Expenses</small><strong id="todayExpenses">₱0.00</strong></div>
-<div class="card metric"><small>Products</small><strong id="productCount">0</strong></div>
-<div class="card metric"><small>Low Stock Items</small><strong id="lowCount">0</strong></div>
-</div>
-<div class="card"><div class="row"><strong>Quick reminder</strong><span class="pill">Store tip</span></div><p class="muted">I-record agad ang bawat benta at gastos para mas accurate ang reports.</p></div>
-<div class="note">Important: Ang prototype na ito ay nagse-save sa browser ng cellphone na ito. Huwag muna i-clear ang browser data. Gumawa tayo ng backup/export feature sa susunod na version.</div>
+<nav class="tabs" aria-label="Mga seksyon">
+<button class="active" data-tab="home">Dashboard</button><button data-tab="products">Paninda</button><button data-tab="sales">Benta</button><button data-tab="expenses">Gastos</button><button data-tab="notes">Utang / Notes</button><button data-tab="backup">Backup</button>
+</nav>
+<section id="home" class="panel active">
+<div class="card"><h2>Buod ng tindahan</h2><div class="stats">
+<div class="stat"><small>Benta ngayon</small><strong id="todaySales">₱0.00</strong></div>
+<div class="stat"><small>Gastos ngayon</small><strong id="todayExpenses">₱0.00</strong></div>
+<div class="stat"><small>Mga paninda</small><strong id="productCount">0</strong></div>
+<div class="stat"><small>Tinatayang stock value</small><strong id="stockValue">₱0.00</strong></div>
+</div></div>
+<div class="card"><h2>Mabilisang paalala</h2><p class="note">Ilagay ang paninda at puhunan nang tama. Itala ang bawat benta at gastos. Ang app na ito ay nagse-save sa browser ng device na ito; mag-download ng backup para hindi mawala ang records kapag na-clear ang browser data.</p></div>
+<div class="card"><h2>Pinakahuling benta</h2><div id="recentSales"></div></div>
 </section>
-
-<section id="inventory" class="page">
-<h2>Inventory / Products</h2>
-<div class="card">
-<strong>Add New Product</strong>
-<label>Product name</label><input id="pname" placeholder="Hal. Sardinas 155g">
-<div class="grid">
-<div><label>Cost price (₱)</label><input id="pcost" type="number" min="0" step=".01" placeholder="15"></div>
-<div><label>Selling price (₱)</label><input id="pprice" type="number" min="0" step=".01" placeholder="18"></div>
-</div>
-<label>Starting stock (pcs)</label><input id="pstock" type="number" min="0" step="1" placeholder="20">
-<button class="primary" onclick="addProduct()">＋ Add Product</button>
-</div>
-<div class="row"><strong>Product list</strong><span class="muted" id="inventoryTotal">0 items</span></div>
-<div class="card" id="productList"></div>
+<section id="products" class="panel">
+<div class="card"><h2>Magdagdag ng paninda</h2><form id="productForm">
+<label>Product / pangalan<input name="name" required placeholder="Hal. Sardinas"></label>
+<label>SKU / code (opsyonal)<input name="sku" placeholder="Hal. P001"></label>
+<label>Presyo ng bili (₱)<input name="cost" type="number" min="0" step=".01" required></label>
+<label>Presyo ng benta (₱)<input name="price" type="number" min="0" step=".01" required></label>
+<label>Stock / dami<input name="qty" type="number" min="0" step="1" required></label>
+<label>Low-stock alert sa daming<input name="low" type="number" min="0" step="1" value="5"></label>
+<button class="primary wide" type="submit">＋ I-save ang paninda</button></form></div>
+<div class="card"><h2>Listahan ng paninda</h2><div id="productList"></div></div>
 </section>
-
-<section id="sales" class="page">
-<h2>Record a Sale</h2>
-<div class="card">
-<label>Select product</label><select id="saleProduct"></select>
-<label>Quantity sold</label><input id="saleQty" type="number" min="1" step="1" value="1">
-<button class="primary" onclick="recordSale()">Record Sale</button>
-<p class="muted">Automatic na mababawasan ang stock kapag na-record ang sale.</p>
-</div>
-<strong>Recent sales</strong><div class="card" id="salesList"></div>
+<section id="sales" class="panel">
+<div class="card"><h2>Itala ang benta</h2><form id="saleForm">
+<label class="wide">Paninda<select name="product" id="saleProduct" required></select></label>
+<label>Dami<input name="qty" type="number" min="1" step="1" value="1" required></label>
+<label>Paraan ng bayad<select name="method"><option>Cash</option><option>Utang</option><option>GCash</option><option>Iba pa</option></select></label>
+<label class="wide">Petsa<input name="date" type="date" required></label>
+<label class="wide">Paalala (opsyonal)<input name="note" placeholder="Hal. suki / order"></label>
+<button class="primary wide" type="submit">＋ I-save ang benta</button></form><p class="note">Awtomatikong mababawasan ang stock. Para sa utang, itala rin ang pangalan sa seksyong Utang / Notes.</p></div>
+<div class="card"><h2>Kasaysayan ng benta</h2><div id="salesList"></div></div>
 </section>
-
-<section id="expenses" class="page">
-<h2>Expenses / Gastos</h2>
-<div class="card">
-<strong>Add Expense</strong>
-<label>Description</label><input id="edesc" placeholder="Hal. Pamasahe / kuryente">
-<label>Amount (₱)</label><input id="eamount" type="number" min=".01" step=".01" placeholder="100">
-<button class="primary" onclick="addExpense()">＋ Save Expense</button>
-</div>
-<strong>Recent expenses</strong><div class="card" id="expenseList"></div>
+<section id="expenses" class="panel">
+<div class="card"><h2>Itala ang gastos</h2><form id="expenseForm">
+<label>Uri ng gastos<input name="category" required placeholder="Hal. Pamasahe"></label>
+<label>Halaga (₱)<input name="amount" type="number" min=".01" step=".01" required></label>
+<label class="wide">Petsa<input name="date" type="date" required></label>
+<label class="wide">Detalye (opsyonal)<textarea name="note" placeholder="Ano ang binayaran?"></textarea></label>
+<button class="primary wide" type="submit">＋ I-save ang gastos</button></form></div>
+<div class="card"><h2>Kasaysayan ng gastos</h2><div id="expenseList"></div></div>
 </section>
-
-<section id="reports" class="page">
-<h2>Reports / Ulat</h2>
-<div class="grid">
-<div class="card metric"><small>Total Sales</small><strong id="rSales">₱0.00</strong></div>
-<div class="card metric"><small>Cost of Goods Sold</small><strong id="rCost">₱0.00</strong></div>
-<div class="card metric"><small>Gross Profit</small><strong id="rGross">₱0.00</strong></div>
-<div class="card metric"><small>Total Expenses</small><strong id="rExpenses">₱0.00</strong></div>
-</div>
-<div class="card metric"><small>Estimated Net Profit</small><strong id="rNet">₱0.00</strong><p class="muted">Sales − cost ng nabentang items − recorded expenses. Hindi pa kasama ang ibang unrecorded costs.</p></div>
-<div class="card"><strong>Data backup</strong><p class="muted">I-download ang kopya ng iyong records bilang JSON file.</p><button class="primary" onclick="backupData()">Download Backup</button><label>Restore backup file</label><input type="file" id="restoreFile" accept=".json,application/json" onchange="restoreData(event)"></div>
-<div class="card"><strong>Reset demo data</strong><p class="muted">Tatanggalin nito ang lahat ng products, sales at expenses sa browser na ito.</p><button class="danger" onclick="resetData()">Reset all data</button></div>
+<section id="notes" class="panel">
+<div class="card"><h2>Utang / customer notes</h2><form id="noteForm">
+<label>Pangalan<input name="name" required placeholder="Pangalan ng customer"></label>
+<label>Halaga ng utang (₱)<input name="amount" type="number" min="0" step=".01" value="0" required></label>
+<label class="wide">Detalye<input name="detail" placeholder="Hal. petsa / biniling paninda"></label>
+<button class="primary wide" type="submit">＋ Idagdag ang record</button></form></div>
+<div class="card"><h2>Mga record</h2><div id="noteList"></div></div>
 </section>
+<section id="backup" class="panel">
+<div class="card"><h2>Backup at restore</h2><p class="note">I-download ang backup paminsan-minsan. Itago ang file sa ligtas na lugar. Ang pag-restore ay papalit sa kasalukuyang records.</p>
+<div class="actions"><button class="primary" id="exportBtn" type="button">⬇ I-download ang backup</button><label class="secondary" style="display:inline-block;cursor:pointer;color:var(--ink)">⬆ I-restore ang backup<input id="importFile" type="file" accept="application/json,.json" style="display:none"></label></div>
+<div class="actions"><button class="danger" id="clearBtn" type="button">Burahin lahat ng records</button></div>
+<p class="note">Tip: kung gagamit ng ibang cellphone o browser, hindi awtomatikong lilipat ang records. Gamitin ang backup/restore.</p></div>
+</section>
+<footer class="note" style="text-align:center;padding:8px">Store Manager Organizer • Simpleng lokal na record keeper</footer>
 </main>
-<footer>Store Manager PH • Version 1.0 prototype</footer>
 <script>
-const KEY='storeManagerPH_v1';
-let db={products:[],sales:[],expenses:[]};
-try{const saved=localStorage.getItem(KEY);if(saved)db=JSON.parse(saved)}catch(e){}
-const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
-const todayKey=()=>new Date().toLocaleDateString('en-CA');
-const dateLabel=iso=>new Date(iso).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'});
+const KEY='storeManagerOrganizer_v1';
+const today=()=>new Date().toLocaleDateString('en-CA');
+const blank=()=>({products:[],sales:[],expenses:[],notes:[]});
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY))||blank()}catch(e){db=blank()}
+const peso=n=>'₱'+Number(n||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
-function tab(name){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===name));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));render()}
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
-function addProduct(){
- const name=document.getElementById('pname').value.trim(),cost=Number(document.getElementById('pcost').value),price=Number(document.getElementById('pprice').value),stock=Number(document.getElementById('pstock').value);
- if(!name||document.getElementById('pcost').value===''||document.getElementById('pprice').value===''||document.getElementById('pstock').value===''||cost<0||price<=0||stock<0||!Number.isInteger(stock)){alert('Pakilagyan nang tama ang lahat ng fields.');return}
- db.products.push({id:Date.now(),name,cost,price,stock});['pname','pcost','pprice','pstock'].forEach(id=>document.getElementById(id).value='');save();
-}
-function deleteProduct(id){if(!confirm('Delete this product? Hindi mabubura ang dating sales records.'))return;db.products=db.products.filter(p=>p.id!==id);save()}
-function adjustStock(id){const p=db.products.find(x=>x.id===id);const n=prompt('Ilagay ang bagong stock quantity para sa '+p.name,p.stock);if(n===null)return;const v=Number(n);if(!Number.isInteger(v)||v<0){alert('Maglagay ng valid whole number.');return}p.stock=v;save()}
-function recordSale(){
- const id=Number(document.getElementById('saleProduct').value),qty=Number(document.getElementById('saleQty').value),p=db.products.find(x=>x.id===id);
- if(!p){alert('Mag-add muna ng product sa Inventory.');return}if(!Number.isInteger(qty)||qty<1){alert('Valid quantity ang ilagay.');return}if(qty>p.stock){alert('Kulang ang stock. Available: '+p.stock);return}
- p.stock-=qty;db.sales.unshift({id:Date.now(),productId:p.id,name:p.name,qty,price:p.price,cost:p.cost,total:p.price*qty,date:new Date().toISOString()});document.getElementById('saleQty').value=1;save();alert('Sale recorded! Total: '+money(p.price*qty));
-}
-function addExpense(){const desc=document.getElementById('edesc').value.trim(),amount=Number(document.getElementById('eamount').value);if(!desc||amount<=0||!Number.isFinite(amount)){alert('Ilagay ang description at valid amount.');return}db.expenses.unshift({id:Date.now(),desc,amount,date:new Date().toISOString()});document.getElementById('edesc').value='';document.getElementById('eamount').value='';save()}
-function sum(a,fn){return a.reduce((t,x)=>t+fn(x),0)}
+function empty(msg='Wala pang record.'){return `<div class="empty">${msg}</div>`}
 function render(){
- const today=todayKey(),ts=db.sales.filter(x=>x.date.slice(0,10)===today),te=db.expenses.filter(x=>x.date.slice(0,10)===today);
- document.getElementById('today').textContent=new Date().toLocaleDateString('en-PH',{dateStyle:'full'});
- document.getElementById('todaySales').textContent=money(sum(ts,x=>x.total));document.getElementById('todayExpenses').textContent=money(sum(te,x=>x.amount));
- document.getElementById('productCount').textContent=db.products.length;document.getElementById('lowCount').textContent=db.products.filter(x=>x.stock<=5).length;
- document.getElementById('inventoryTotal').textContent=db.products.length+' items';
- document.getElementById('productList').innerHTML=db.products.length?db.products.map(p=>`<div class="item"><div class="row"><div><strong>${esc(p.name)}</strong><small>Cost ${money(p.cost)} • Selling ${money(p.price)}</small><small>Stock: <b>${p.stock}</b> ${p.stock<=5?'<span class="pill">Low stock</span>':''}</small></div><div class="actions"><button class="secondary" onclick="adjustStock(${p.id})">Stock</button><button class="danger" onclick="deleteProduct(${p.id})">✕</button></div></div></div>`).join(''):'<div class="empty">Wala pang products. Mag-add sa form sa taas.</div>';
- const sel=document.getElementById('saleProduct');sel.innerHTML=db.products.filter(p=>p.stock>0).map(p=>`<option value="${p.id}">${esc(p.name)} — ${p.stock} pcs — ${money(p.price)}</option>`).join('');if(!sel.options.length)sel.innerHTML='<option value="">No available stock</option>';
- document.getElementById('salesList').innerHTML=db.sales.length?db.sales.slice(0,30).map(s=>`<div class="item"><div class="row"><div><strong>${esc(s.name)} × ${s.qty}</strong><small>${dateLabel(s.date)} • ${money(s.price)} each</small></div><b>${money(s.total)}</b></div></div>`).join(''):'<div class="empty">Wala pang sales records.</div>';
- document.getElementById('expenseList').innerHTML=db.expenses.length?db.expenses.slice(0,30).map(e=>`<div class="item"><div class="row"><div><strong>${esc(e.desc)}</strong><small>${dateLabel(e.date)}</small></div><b>${money(e.amount)}</b></div></div>`).join(''):'<div class="empty">Wala pang expenses.</div>';
- const sales=sum(db.sales,x=>x.total),cost=sum(db.sales,x=>x.cost*x.qty),expenses=sum(db.expenses,x=>x.amount),gross=sales-cost;
- document.getElementById('rSales').textContent=money(sales);document.getElementById('rCost').textContent=money(cost);document.getElementById('rGross').textContent=money(gross);document.getElementById('rExpenses').textContent=money(expenses);document.getElementById('rNet').textContent=money(gross-expenses);
+ document.querySelector('#todaySales').textContent=peso(db.sales.filter(x=>x.date===today()).reduce((s,x)=>s+x.total,0));
+ document.querySelector('#todayExpenses').textContent=peso(db.expenses.filter(x=>x.date===today()).reduce((s,x)=>s+x.amount,0));
+ document.querySelector('#productCount').textContent=db.products.length;
+ document.querySelector('#stockValue').textContent=peso(db.products.reduce((s,p)=>s+p.qty*p.cost,0));
+ document.querySelector('#productList').innerHTML=db.products.length?db.products.map(p=>`<div class="item"><div><b>${esc(p.name)} ${p.qty<=p.low?'<span class="pill">Kaunti na</span>':''}</b><small>${esc(p.sku||'Walang code')} · Stock: ${p.qty} · Bili ${peso(p.cost)} · Benta ${peso(p.price)}</small><div class="actions"><button class="secondary" onclick="adjustStock('${p.id}')">Ayusin stock</button><button class="danger" onclick="deleteProduct('${p.id}')">Tanggalin</button></div></div><div class="money">${peso(p.price)}</div></div>`).join(''):empty();
+ const opts=db.products.map(p=>`<option value="${p.id}">${esc(p.name)} — stock ${p.qty} — ${peso(p.price)}</option>`).join('');
+ document.querySelector('#saleProduct').innerHTML=opts||'<option value="">Magdagdag muna ng paninda</option>';
+ document.querySelector('#salesList').innerHTML=db.sales.length?[...db.sales].reverse().map(s=>`<div class="item"><div><b>${esc(s.name)} × ${s.qty}</b><small>${esc(s.date)} · ${esc(s.method)}${s.note?' · '+esc(s.note):''}</small><button class="danger" onclick="deleteSale('${s.id}')">Tanggalin record</button></div><div class="money">${peso(s.total)}</div></div>`).join(''):empty();
+ document.querySelector('#recentSales').innerHTML=db.sales.length?[...db.sales].reverse().slice(0,5).map(s=>`<div class="item"><div><b>${esc(s.name)} × ${s.qty}</b><small>${esc(s.date)}</small></div><div class="money">${peso(s.total)}</div></div>`).join(''):empty();
+ document.querySelector('#expenseList').innerHTML=db.expenses.length?[...db.expenses].reverse().map(e=>`<div class="item"><div><b>${esc(e.category)}</b><small>${esc(e.date)}${e.note?' · '+esc(e.note):''}</small><button class="danger" onclick="deleteExpense('${e.id}')">Tanggalin</button></div><div class="money">${peso(e.amount)}</div></div>`).join(''):empty();
+ document.querySelector('#noteList').innerHTML=db.notes.length?[...db.notes].reverse().map(n=>`<div class="item"><div><b>${esc(n.name)}</b><small>${esc(n.detail||'Walang detalye')}</small><div class="actions"><button class="secondary" onclick="payNote('${n.id}')">Bayad / bawas</button><button class="danger" onclick="deleteNote('${n.id}')">Tanggalin</button></div></div><div class="money">${peso(n.amount)}</div></div>`).join(''):empty();
 }
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function backupData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='StoreManagerPH-backup.json';a.click();URL.revokeObjectURL(url)}
-function restoreData(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.products)||!Array.isArray(d.sales)||!Array.isArray(d.expenses))throw Error();if(!confirm('Replace current data with this backup?'))return;db=d;save();alert('Backup restored.')}catch(e){alert('Invalid backup file.')}ev.target.value=''};r.readAsText(f)}
-function resetData(){if(!confirm('Sigurado ka? Mabubura ang lahat ng records.'))return;db={products:[],sales:[],expenses:[]};save()}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))}));
+document.querySelector('#productForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target);db.products.push({id:id(),name:f.get('name').trim(),sku:f.get('sku').trim(),cost:+f.get('cost'),price:+f.get('price'),qty:+f.get('qty'),low:+f.get('low')||0});e.target.reset();e.target.elements.low.value=5;save();alert('Na-save ang paninda!')});
+document.querySelector('#saleForm').elements.date.value=today();
+document.querySelector('#saleForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target),p=db.products.find(x=>x.id===f.get('product')),q=+f.get('qty');if(!p){alert('Magdagdag muna ng paninda.');return}if(q>p.qty){alert('Kulang ang stock. Available: '+p.qty);return}p.qty-=q;db.sales.push({id:id(),product:p.id,name:p.name,qty:q,price:p.price,total:q*p.price,method:f.get('method'),date:f.get('date'),note:f.get('note').trim()});e.target.reset();e.target.elements.date.value=today();e.target.elements.qty.value=1;save();alert('Na-save ang benta!')});
+document.querySelector('#expenseForm').elements.date.value=today();
+document.querySelector('#expenseForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target);db.expenses.push({id:id(),category:f.get('category').trim(),amount:+f.get('amount'),date:f.get('date'),note:f.get('note').trim()});e.target.reset();e.target.elements.date.value=today();save();alert('Na-save ang gastos!')});
+document.querySelector('#noteForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target);db.notes.push({id:id(),name:f.get('name').trim(),amount:+f.get('amount'),detail:f.get('detail').trim()});e.target.reset();save();alert('Na-save ang record!')});
+window.deleteProduct=id=>{if(confirm('Tanggalin ang paninda? Hindi nito buburahin ang lumang benta.')){db.products=db.products.filter(x=>x.id!==id);save()}};
+window.adjustStock=id=>{let p=db.products.find(x=>x.id===id),v=prompt('Bagong kabuuang stock para sa '+p.name,p.qty);if(v!==null&&v.trim()!==''&&Number.isFinite(+v)&&+v>=0&&Number.isInteger(+v)){p.qty=+v;save()}};
+window.deleteSale=id=>{if(confirm('Tanggalin ang record ng benta? Hindi awtomatikong ibabalik ang stock.')){db.sales=db.sales.filter(x=>x.id!==id);save()}};
+window.deleteExpense=id=>{if(confirm('Tanggalin ang gastos na ito?')){db.expenses=db.expenses.filter(x=>x.id!==id);save()}};
+window.deleteNote=id=>{if(confirm('Tanggalin ang record na ito?')){db.notes=db.notes.filter(x=>x.id!==id);save()}};
+window.payNote=id=>{let n=db.notes.find(x=>x.id===id),v=prompt('Magkano ang ibinayad? Natitirang utang: '+peso(n.amount),'0');if(v!==null&&Number.isFinite(+v)&&+v>0){n.amount=Math.max(0,n.amount-(+v));if(n.amount===0){if(confirm('Bayad na nang buo. Alisin ang record?'))db.notes=db.notes.filter(x=>x.id!==id)}save()}};
+document.querySelector('#exportBtn').addEventListener('click',()=>{let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='store-manager-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)});
+document.querySelector('#importFile').addEventListener('change',async e=>{let file=e.target.files[0];if(!file)return;try{let d=JSON.parse(await file.text());if(!d||!Array.isArray(d.products)||!Array.isArray(d.sales)||!Array.isArray(d.expenses)||!Array.isArray(d.notes))throw Error();if(confirm('Papaltan ang kasalukuyang records ng backup na ito?')){db=d;save();alert('Na-restore ang backup.')}}catch(err){alert('Hindi mabasa ang backup file. Pumili ng valid Store Manager JSON backup.')}e.target.value=''});
+document.querySelector('#clearBtn').addEventListener('click',()=>{if(confirm('Sigurado ka bang burahin LAHAT ng records? I-download muna ang backup kung kailangan.')){db=blank();save()}});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 render();
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('Offline worker registration failed:', err));
-  });
-}
 </script>
 </body></html>

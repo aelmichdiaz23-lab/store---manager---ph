@@ -1,0 +1,11 @@
+{
+  "name": "Store Manager Organizer",
+  "short_name": "Store Manager",
+  "description": "Offline organizer para sa sari-sari store",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f8f6",
+  "theme_color": "#176b4d",
+  "icons": []
+}
